@@ -1,6 +1,6 @@
 package com.nextime.orchestrator.application.gateways;
 
-interface LoggerPort {
+public interface LoggerPort {
 
     void info(String msg, Object... args);
 

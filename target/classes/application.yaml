@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: ms-orchestrator
+
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION:us-east-1}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+    sqs:
+      queues:
+        order-queue: ${SQS_ORDER_QUEUE}
+        order-callback-queue: ${SQS_ORDER_CALLBACK_QUEUE}
+        production-queue: ${SQS_PRODUCTION_QUEUE}
+        production-callback-queue: ${SQS_PRODUCTION_CALLBACK_QUEUE}
+        payment-queue: ${SQS_PAYMENT_QUEUE}
+        payment-callback-queue: ${SQS_PAYMENT_CALLBACK_QUEUE}
+
+  server:
+    port: 8080
+

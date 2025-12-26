@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+
+  orchestrator-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: orchestrator-api
+    restart: always
+    networks:
+      - orchestrator-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - SQS_ORDER_QUEUE=order-queue
+      - SQS_ORDER_CALLBACK_QUEUE=order-callback-queue
+      - SQS_PAYMENT_QUEUE=payment-queue
+      - SQS_PAYMENT_CALLBACK_QUEUE=payment-callback-queue
+      - SQS_PRODUCTION_QUEUE=production-queue
+      - SQS_PRODUCTION_CALLBACK_QUEUE=production-callback-queue
+    ports:
+      - "8080:8080"
+    depends_on:
+      - orchestrator-localstack
+
+  orchestrator-localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      SERVICES: sqs
+      DEBUG: "1"
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_SESSION_TOKEN: test
+    networks:
+      - orchestrator-network
+    volumes:
+      - "./localstack:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./local/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
+
+networks:
+  orchestrator-network:
+    driver: bridge

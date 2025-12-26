@@ -1,4 +1,21 @@
-FROM ubuntu:latest
-LABEL authors="Administrador"
+# ----- BUILD PHASE -----
+FROM maven:3.9.9-amazoncorretto-17 AS build
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR /app
+
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# ----- RUNTIME PHASE -----
+FROM amazoncorretto:17-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/target/app.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

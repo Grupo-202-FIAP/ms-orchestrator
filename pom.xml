@@ -49,12 +49,6 @@
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
 
-        <!-- Coroutines -->
-        <dependency>
-            <groupId>org.jetbrains.kotlinx</groupId>
-            <artifactId>kotlinx-coroutines-core</artifactId>
-        </dependency>
-
         <!-- JSON -->
         <dependency>
             <groupId>tools.jackson.module</groupId>

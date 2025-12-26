@@ -1,4 +1,4 @@
-package com.nextime.orchestrator.application.config.exception
+package com.nextime.orchestrator.infrastructure.controller.exception
 
 //@ControllerAdvice
 //class ExceptionGlobalHandler {
