@@ -19,7 +19,6 @@ class OrchestrationService(
     private val jsonConverter: JsonConverter,
     private val sagaExecutionService: SagaExecutionService,
     private val messageProducer: MessageProducerPort,
-    private val queueUrlResolver: com.nextime.orchestrator.infrastructure.config.QueueUrlResolver
 ) : OrchestrationUseCase {
 
     override fun handleSaga(event: Event) {
@@ -87,9 +86,12 @@ class OrchestrationService(
         logger.info("SAGA ROLLBACK FOR EVENT ${event.id}!")
         addHistory(event, "Saga rollback initiated")
 
-        val queue = sagaExecutionService.getNextQueue(event)
-        logger.info("Sending rollback event to queue: $queue")
-        sendToProducerWithQueue(event, queue)
+        val queues = sagaExecutionService.getAllNextQueues(event)
+        logger.info("Sending rollback event to queues: $queues")
+
+        queues.forEach { queue ->
+            sendToProducerWithQueue(event, queue)
+        }
     }
 
     fun continueSaga(event: Event) {

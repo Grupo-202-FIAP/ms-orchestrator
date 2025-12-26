@@ -6,10 +6,6 @@ import com.nextime.orchestrator.domain.enums.ESagaStatus
 
 object SagaHandler {
 
-    const val EVENT_SOURCE_INDEX = 0
-    const val STATUS_INDEX = 1
-    const val QUEUE_INDEX = 2
-
     val SAGA_HANDLER: List<Triple<EEventSource, ESagaStatus, EQueues>> = listOf(
 
         // =========================
@@ -18,12 +14,12 @@ object SagaHandler {
         Triple(
             EEventSource.ORCHESTRATOR,
             ESagaStatus.SUCCESS,
-            EQueues.PRODUCTION_QUEUE   // RECEIVED
+            EQueues.PRODUCTION_QUEUE
         ),
         Triple(
             EEventSource.ORCHESTRATOR,
             ESagaStatus.SUCCESS,
-            EQueues.PAYMENT_QUEUE      // PROCESS
+            EQueues.PAYMENT_QUEUE
         ),
 
         // =========================
@@ -41,14 +37,19 @@ object SagaHandler {
         Triple(
             EEventSource.PAYMENT,
             ESagaStatus.FAIL,
-            EQueues.PRODUCTION_CALLBACK_QUEUE
+            EQueues.PRODUCTION_QUEUE
         ),
 
-        // Payment ROLLBACK_PENDING → avisa Order
+        // Payment ROLLBACK_PENDING → avisa Production
         Triple(
             EEventSource.PAYMENT,
             ESagaStatus.ROLLBACK_PENDING,
-            EQueues.ORDER_CALLBACK_QUEUE
+            EQueues.PAYMENT_QUEUE
+        ),
+        Triple(
+            EEventSource.PAYMENT,
+            ESagaStatus.ROLLBACK_PENDING,
+            EQueues.PRODUCTION_QUEUE
         ),
 
         // =========================
@@ -62,18 +63,23 @@ object SagaHandler {
             EQueues.ORDER_CALLBACK_QUEUE
         ),
 
-        // Production FAIL → inicia rollback do Payment
+        // Production FAIL → Finaliza saga com erro
         Triple(
             EEventSource.PRODUCTION,
             ESagaStatus.FAIL,
-            EQueues.PAYMENT_CALLBACK_QUEUE
+            EQueues.ORDER_CALLBACK_QUEUE
         ),
 
         // Production ROLLBACK_PENDING → avisa Order
         Triple(
             EEventSource.PRODUCTION,
             ESagaStatus.ROLLBACK_PENDING,
-            EQueues.ORDER_CALLBACK_QUEUE
+            EQueues.PRODUCTION_QUEUE
+        ),
+        Triple(
+            EEventSource.PRODUCTION,
+            ESagaStatus.ROLLBACK_PENDING,
+            EQueues.PAYMENT_QUEUE
         )
     )
 }
