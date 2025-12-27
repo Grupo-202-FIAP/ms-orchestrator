@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="C:\Users\Administrador\Documents\Leor things\pos\soat\projeto\ms-orchestrator\src\main\kotlin\com\nextime\orchestrator\application\config\sqs\SqsConfig.java">
+</file>
+<file name="C:\Users\Administrador\Documents\Leor things\pos\soat\projeto\ms-orchestrator\src\main\kotlin\com\nextime\orchestrator\application\gateways\LoggerPort.java">
+</file>
+<file name="C:\Users\Administrador\Documents\Leor things\pos\soat\projeto\ms-orchestrator\src\main\kotlin\com\nextime\orchestrator\application\ports\out\MessageProducerPort.java">
+</file>
+</checkstyle>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SagaHandler.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">orchestrator</a> &gt; <a href="index.source.html" class="el_package">com.nextime.orchestrator.domain</a> &gt; <span class="el_source">SagaHandler.kt</span></div><h1>SagaHandler.kt</h1><pre class="source lang-java linenums">package com.nextime.orchestrator.domain
+
+import com.nextime.orchestrator.domain.enums.EEventSource
+import com.nextime.orchestrator.domain.enums.EQueues
+import com.nextime.orchestrator.domain.enums.ESagaStatus
+
+object SagaHandler {
+
+<span class="fc" id="L9">    val SAGA_HANDLER: List&lt;Triple&lt;EEventSource, ESagaStatus, EQueues&gt;&gt; = listOf(</span>
+
+        // =========================
+        // 1️⃣ START DA SAGA (fan-out)
+        // =========================
+<span class="fc" id="L14">        Triple(</span>
+<span class="fc" id="L15">            EEventSource.ORCHESTRATOR,</span>
+<span class="fc" id="L16">            ESagaStatus.SUCCESS,</span>
+<span class="fc" id="L17">            EQueues.PRODUCTION_QUEUE</span>
+        ),
+<span class="fc" id="L19">        Triple(</span>
+<span class="fc" id="L20">            EEventSource.ORCHESTRATOR,</span>
+<span class="fc" id="L21">            ESagaStatus.SUCCESS,</span>
+<span class="fc" id="L22">            EQueues.PAYMENT_QUEUE</span>
+        ),
+
+        // =========================
+        // 2️⃣ PAYMENT
+        // =========================
+
+        // Payment SUCCESS → Production PREPARING
+<span class="fc" id="L30">        Triple(</span>
+<span class="fc" id="L31">            EEventSource.PAYMENT,</span>
+<span class="fc" id="L32">            ESagaStatus.SUCCESS,</span>
+<span class="fc" id="L33">            EQueues.PRODUCTION_QUEUE</span>
+        ),
+
+        // Payment FAIL → inicia rollback da Production
+<span class="fc" id="L37">        Triple(</span>
+<span class="fc" id="L38">            EEventSource.PAYMENT,</span>
+<span class="fc" id="L39">            ESagaStatus.FAIL,</span>
+<span class="fc" id="L40">            EQueues.PRODUCTION_QUEUE</span>
+        ),
+
+        // Payment ROLLBACK_PENDING → avisa Production
+<span class="fc" id="L44">        Triple(</span>
+<span class="fc" id="L45">            EEventSource.PAYMENT,</span>
+<span class="fc" id="L46">            ESagaStatus.ROLLBACK_PENDING,</span>
+<span class="fc" id="L47">            EQueues.PAYMENT_QUEUE</span>
+        ),
+<span class="fc" id="L49">        Triple(</span>
+<span class="fc" id="L50">            EEventSource.PAYMENT,</span>
+<span class="fc" id="L51">            ESagaStatus.ROLLBACK_PENDING,</span>
+<span class="fc" id="L52">            EQueues.PRODUCTION_QUEUE</span>
+        ),
+
+        // =========================
+        // 3️⃣ PRODUCTION
+        // =========================
+
+        // Production SUCCESS → finaliza saga
+<span class="fc" id="L60">        Triple(</span>
+<span class="fc" id="L61">            EEventSource.PRODUCTION,</span>
+<span class="fc" id="L62">            ESagaStatus.SUCCESS,</span>
+<span class="fc" id="L63">            EQueues.ORDER_CALLBACK_QUEUE</span>
+        ),
+
+        // Production FAIL → Finaliza saga com erro
+<span class="fc" id="L67">        Triple(</span>
+<span class="fc" id="L68">            EEventSource.PRODUCTION,</span>
+<span class="fc" id="L69">            ESagaStatus.FAIL,</span>
+<span class="fc" id="L70">            EQueues.ORDER_CALLBACK_QUEUE</span>
+        ),
+
+        // Production ROLLBACK_PENDING → avisa Order
+<span class="fc" id="L74">        Triple(</span>
+<span class="fc" id="L75">            EEventSource.PRODUCTION,</span>
+<span class="fc" id="L76">            ESagaStatus.ROLLBACK_PENDING,</span>
+<span class="fc" id="L77">            EQueues.PRODUCTION_QUEUE</span>
+        ),
+<span class="fc" id="L79">        Triple(</span>
+<span class="fc" id="L80">            EEventSource.PRODUCTION,</span>
+<span class="fc" id="L81">            ESagaStatus.ROLLBACK_PENDING,</span>
+<span class="fc" id="L82">            EQueues.PAYMENT_QUEUE</span>
+        )
+    )
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

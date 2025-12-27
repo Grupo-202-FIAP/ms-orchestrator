@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.nextime.orchestrator.OrchestratorApplicationTests" time="0.002" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.nextime.orchestrator.utils.JsonConverterTest" time="0.265" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -61,5 +61,10 @@
     <property name="maven.repo.local" value="C:\Users\Administrador\.m2\repository"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="contextLoads" classname="com.nextime.orchestrator.OrchestratorApplicationTests" time="0.001"/>
+  <testcase name="toEvent with malformed json should throw RuntimeException" classname="com.nextime.orchestrator.utils.JsonConverterTest" time="0.016"/>
+  <testcase name="toEvent should parse event json successfully" classname="com.nextime.orchestrator.utils.JsonConverterTest" time="0.189"/>
+  <testcase name="toJson should serialize object to json" classname="com.nextime.orchestrator.utils.JsonConverterTest" time="0.006"/>
+  <testcase name="toEvent invalid json should log and throw" classname="com.nextime.orchestrator.utils.JsonConverterTest" time="0.017"/>
+  <testcase name="toEvent should parse json to Event" classname="com.nextime.orchestrator.utils.JsonConverterTest" time="0.02"/>
+  <testcase name="toJson should serialize simple map" classname="com.nextime.orchestrator.utils.JsonConverterTest" time="0.011"/>
 </testsuite>

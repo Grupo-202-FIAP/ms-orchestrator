@@ -31,6 +31,8 @@
         <kotlin.version>2.2.21</kotlin.version>
         <logstash-logback-encoder.version>8.1</logstash-logback-encoder.version>
         <spring-cloud-aws-starter-sqs.version>4.0.0-M1</spring-cloud-aws-starter-sqs.version>
+        <mockk.version>1.14.7</mockk.version>
+        <jacoco.version>0.8.11</jacoco.version>
     </properties>
     <dependencies>
         <!-- Spring core -->
@@ -74,17 +76,6 @@
             <version>${spring-cloud-aws-starter-sqs.version}</version>
         </dependency>
 
-        <!-- Observabilidade -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-micrometer-metrics</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-datadog</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
         <!-- Testes -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -95,6 +86,27 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk</artifactId>
+            <version>${mockk.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Cucumber (integração BDD) -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.11.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>7.11.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -153,6 +165,25 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>

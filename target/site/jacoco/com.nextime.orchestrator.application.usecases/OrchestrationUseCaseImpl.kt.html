@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrchestrationUseCaseImpl.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">orchestrator</a> &gt; <a href="index.source.html" class="el_package">com.nextime.orchestrator.application.usecases</a> &gt; <span class="el_source">OrchestrationUseCaseImpl.kt</span></div><h1>OrchestrationUseCaseImpl.kt</h1><pre class="source lang-java linenums">package com.nextime.orchestrator.application.usecases
+
+import com.nextime.orchestrator.domain.exception.SagaConfigurationException
+import com.nextime.orchestrator.application.exception.SagaProcessingException
+import com.nextime.orchestrator.application.ports.`in`.OrchestrationUseCase
+import com.nextime.orchestrator.application.gateways.LoggerPort
+import com.nextime.orchestrator.application.ports.out.MessageProducerPort
+import com.nextime.orchestrator.domain.Event
+import com.nextime.orchestrator.domain.History
+import com.nextime.orchestrator.domain.enums.EEventSource
+import com.nextime.orchestrator.domain.enums.EQueues
+import com.nextime.orchestrator.domain.enums.ESagaStatus
+import com.nextime.orchestrator.domain.services.SagaExecutionService
+import com.nextime.orchestrator.utils.JsonConverter
+import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+
+<span class="fc" id="L18">@Service</span>
+<span class="fc" id="L19">class OrchestrationUseCaseImpl(</span>
+<span class="fc" id="L20">    private val logger: LoggerPort,</span>
+<span class="fc" id="L21">    private val jsonConverter: JsonConverter,</span>
+<span class="fc" id="L22">    private val sagaExecutionService: SagaExecutionService,</span>
+<span class="fc" id="L23">    private val messageProducer: MessageProducerPort,</span>
+) : OrchestrationUseCase {
+
+    override fun handleSaga(event: Event) {
+<span class="fc" id="L27">        try {</span>
+<span class="fc" id="L28">            when {</span>
+                // Evento nunca processado → start
+<span class="pc bpc" id="L30" title="3 of 4 branches missed.">                event.source == null || event.status == null -&gt; startSaga(event)</span>
+
+                // Evento terminou produção ou pagamento com sucesso → continue
+<span class="nc bnc" id="L33" title="All 4 branches missed.">                event.status == ESagaStatus.SUCCESS &amp;&amp; !isSagaFinished(event) -&gt; continueSaga(event)</span>
+
+                // Evento falhou → finalizar com erro
+<span class="nc bnc" id="L36" title="All 2 branches missed.">                event.status == ESagaStatus.FAIL -&gt; finishSagaFail(event)</span>
+
+                // Evento terminou produção → finaliza saga
+<span class="nc bnc" id="L39" title="All 4 branches missed.">                event.status == ESagaStatus.SUCCESS &amp;&amp; isSagaFinished(event) -&gt; finishSagaSuccess(event)</span>
+
+<span class="nc bnc" id="L41" title="All 2 branches missed.">                event.status == ESagaStatus.ROLLBACK_PENDING -&gt; handleRollback(event)</span>
+
+<span class="nc" id="L43">                else -&gt; logger.warn(&quot;[OrchestrationService.handleSaga] evento não mapeado no fluxo: $event&quot;)</span>
+            }
+<span class="fc" id="L45">        } catch (ex: Exception) {</span>
+<span class="fc" id="L46">            logger.error(&quot;[OrchestrationService.handleSaga] Erro ao processar saga: ${jsonConverter.toJson(event)}&quot;, ex)</span>
+<span class="fc" id="L47">            throw SagaProcessingException(</span>
+<span class="fc" id="L48">                &quot;Erro ao processar saga para o evento para eventId=${event.id}&quot;,</span>
+<span class="fc" id="L49">                ex</span>
+            )
+        }
+<span class="fc" id="L52">    }</span>
+
+    override fun startSaga(event: Event) {
+<span class="fc" id="L55">        event.source = EEventSource.ORCHESTRATOR</span>
+<span class="fc" id="L56">        event.status = ESagaStatus.SUCCESS</span>
+<span class="fc" id="L57">        logger.info(&quot;[OrchestrationService.startSaga] Saga iniciada com o id: ${event.id}&quot;)</span>
+<span class="fc" id="L58">        addHistory(event, &quot;Saga iniciada!&quot;)</span>
+
+<span class="fc" id="L60">        val queues = sagaExecutionService.getAllNextQueues(event)</span>
+
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (queues.isEmpty()) {</span>
+<span class="fc" id="L63">            throw SagaConfigurationException(</span>
+<span class="fc" id="L64">                &quot;No queues configured for ORCHESTRATOR + SUCCESS&quot;</span>
+            )
+        }
+
+<span class="fc" id="L68">        logger.info(&quot;[OrchestrationService.startSaga] Enviando evento para: ${queues.size} filas producer: $queues&quot;)</span>
+
+<span class="fc" id="L70">        queues.forEach { queue -&gt;</span>
+<span class="fc" id="L71">            sendToProducerWithQueue(event, queue)</span>
+<span class="fc" id="L72">        }</span>
+<span class="fc" id="L73">    }</span>
+
+    fun finishSagaSuccess(event: Event) {
+<span class="fc" id="L76">        event.source = EEventSource.ORCHESTRATOR</span>
+<span class="fc" id="L77">        event.status = ESagaStatus.SUCCESS</span>
+<span class="fc" id="L78">        logger.info(&quot;[OrchestrationService.finishSagaSuccess] Saga finalizada com sucesso para o evento do id: ${event.id}!&quot;)</span>
+<span class="fc" id="L79">        addHistory(event, &quot;Saga finalizada com sucesso!&quot;)</span>
+<span class="fc" id="L80">        notifyFinishedSaga(event)</span>
+<span class="fc" id="L81">    }</span>
+
+    fun finishSagaFail(event: Event) {
+<span class="fc" id="L84">        event.source = EEventSource.ORCHESTRATOR</span>
+<span class="fc" id="L85">        event.status = ESagaStatus.FAIL</span>
+<span class="fc" id="L86">        logger.info(&quot;[OrchestrationService.finishSagaFail] Saga finalizada com erro para o evento com id: ${event.id}!&quot;)</span>
+<span class="fc" id="L87">        addHistory(event, &quot;Saga finalizada com erros&quot;)</span>
+<span class="fc" id="L88">        notifyFinishedSaga(event)</span>
+<span class="fc" id="L89">    }</span>
+
+    fun handleRollback(event: Event) {
+<span class="fc" id="L92">        event.source = EEventSource.ORCHESTRATOR</span>
+<span class="fc" id="L93">        logger.info(&quot;[OrchestrationService.handleRollback] Rollback da saga para o evento com o id: ${event.id}!&quot;)</span>
+<span class="fc" id="L94">        addHistory(event, &quot;Inicializando rollback da saga&quot;)</span>
+
+<span class="fc" id="L96">        val queues = sagaExecutionService.getAllNextQueues(event)</span>
+<span class="fc" id="L97">        logger.info(&quot;[OrchestrationService.handleRollback] Enviando evento de rollback para as filas: $queues&quot;)</span>
+
+<span class="fc" id="L99">        queues.forEach { queue -&gt;</span>
+<span class="fc" id="L100">            sendToProducerWithQueue(event, queue)</span>
+<span class="fc" id="L101">        }</span>
+<span class="fc" id="L102">    }</span>
+
+    fun continueSaga(event: Event) {
+<span class="fc" id="L105">        val queue = sagaExecutionService.getNextQueue(event)</span>
+<span class="fc" id="L106">        logger.info(&quot;[OrchestrationService.continueSaga] Continuando saga para o evento com o id: ${event.id}&quot;)</span>
+<span class="fc" id="L107">        sendToProducerWithQueue(event, queue)</span>
+<span class="fc" id="L108">    }</span>
+
+    private fun addHistory(event: Event, message: String?) {
+<span class="fc" id="L111">        val history = History(</span>
+<span class="fc" id="L112">            source = event.source!!,</span>
+<span class="fc" id="L113">            status = event.status!!,</span>
+<span class="fc" id="L114">            message = message,</span>
+<span class="fc" id="L115">            createdAt = LocalDateTime.now()</span>
+        )
+<span class="fc" id="L117">        event.eventHistory += history</span>
+<span class="fc" id="L118">    }</span>
+
+    private fun isSagaFinished(event: Event): Boolean {
+<span class="nc" id="L121">        return sagaExecutionService.isSagaFinished(event)</span>
+    }
+
+    private fun notifyFinishedSaga(event: Event) {
+<span class="fc" id="L125">        val queue = sagaExecutionService.getNextQueue(event)</span>
+<span class="fc" id="L126">        val eventJson = jsonConverter.toJson(event)</span>
+<span class="fc" id="L127">        messageProducer.sendEvent(eventJson, EQueues.ORDER_CALLBACK_QUEUE.queueName)</span>
+<span class="fc" id="L128">    }</span>
+
+    private fun sendToProducerWithQueue(event: Event, queue: EQueues) {
+<span class="fc" id="L131">        val eventJson = jsonConverter.toJson(event)</span>
+<span class="fc" id="L132">        messageProducer.sendEvent(eventJson, queue.queueName)</span>
+<span class="fc" id="L133">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
