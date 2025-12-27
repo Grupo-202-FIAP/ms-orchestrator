@@ -3,6 +3,7 @@ package com.nextime.orchestrator.infrastructure.messaging.producer
 import com.nextime.orchestrator.application.config.sqs.SqsConfig
 import com.nextime.orchestrator.application.gateways.LoggerPort
 import com.nextime.orchestrator.application.ports.out.MessageProducerPort
+import com.nextime.orchestrator.infrastructure.exception.MessagePublishException
 import org.springframework.stereotype.Component
 
 @Component
@@ -13,13 +14,17 @@ class SagaOrchestratorProducer(
 
     override fun sendEvent(payload: String?, queueUrl: String?) {
         try {
-            logger.info("Sending event to queue {} with data {}", queueUrl, payload)
+            logger.info(
+                "[SagaOrchestratorProducer.sendEvent] Iniciando publicação na fila: {}",
+                queueUrl
+            )
             sqsConfig.sqsAsyncClient().sendMessage { builder ->
                 builder.queueUrl(queueUrl)
                 builder.messageBody(payload)
             }
         } catch (ex: Exception) {
-            logger.error("Error trying to send data to queue {} with data {}", queueUrl, payload, ex)
+            logger.error("[SagaOrchestratorProducer.sendEvent] Falha ao publicar a mensagem an fila {}", queueUrl)
+            throw MessagePublishException(queueUrl, ex)
         }
     }
 }

@@ -5,33 +5,27 @@ import com.nextime.orchestrator.domain.SagaHandler
 import com.nextime.orchestrator.domain.enums.EEventSource
 import com.nextime.orchestrator.domain.enums.EQueues
 import com.nextime.orchestrator.domain.enums.ESagaStatus
+import com.nextime.orchestrator.application.exception.InvalidSagaEventException
+import com.nextime.orchestrator.domain.exception.SagaStepNotFoundException
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
-/**
- * Serviço de domínio responsável por determinar o próximo passo da saga
- * baseado no SagaHandler. Não possui dependências externas.
- */
 @Service
 class SagaExecutionService {
 
     fun getNextQueue(event: Event): EQueues {
         if (event.source == null || event.status == null) {
-            throw IllegalArgumentException("Event source ou status não pode ser null")
+            throw InvalidSagaEventException()
         }
 
         return getAllNextQueues(event)
             .firstOrNull()
-            ?: throw IllegalArgumentException("Nenhum tópico encontrado para o source ${event.source} e status ${event.status}")
+            ?: throw SagaStepNotFoundException(event.source!!, event.status!!)
     }
 
-    /**
-     * Retorna todas as filas para um source/status (útil para fan-out)
-     * Por exemplo: ORCHESTRATOR + SUCCESS retorna [PRODUCTION_QUEUE, PAYMENT_QUEUE]
-     */
     fun getAllNextQueues(event: Event): List<EQueues> {
         if (event.source == null || event.status == null) {
-            throw IllegalArgumentException("Event source ou status não pode ser null")
+            throw InvalidSagaEventException()
         }
 
         return SagaHandler.SAGA_HANDLER
@@ -39,10 +33,6 @@ class SagaExecutionService {
             .map { it.third }
     }
 
-    /**
-     * Verifica se a saga terminou baseado no SagaHandler
-     * A saga termina quando o próximo passo leva para ORDER_CALLBACK_QUEUE
-     */
     fun isSagaFinished(event: Event): Boolean {
         if (event.source == null || event.status == null) {
             return false
