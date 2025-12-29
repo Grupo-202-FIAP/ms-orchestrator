@@ -33,6 +33,7 @@
         <spring-cloud-aws-starter-sqs.version>4.0.0-M1</spring-cloud-aws-starter-sqs.version>
         <mockk.version>1.14.7</mockk.version>
         <jacoco.version>0.8.11</jacoco.version>
+        <cucumber-java.version>7.15.0</cucumber-java.version>
     </properties>
     <dependencies>
         <!-- Spring core -->
@@ -100,19 +101,34 @@
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
-            <version>7.11.0</version>
+            <version>${cucumber-java.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit-platform-engine</artifactId>
-            <version>7.11.0</version>
+            <version>${cucumber-java.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${cucumber-java.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
             <scope>test</scope>
         </dependency>
 
     </dependencies>
 
     <build>
+        <finalName>app</finalName>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>

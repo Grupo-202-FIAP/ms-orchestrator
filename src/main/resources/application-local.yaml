@@ -16,15 +16,10 @@ spring:
     queues:
       order-queue: order-queue
       order-callback-queue: order-callback-queue
-
-      sqs:
-        queues:
-          order-queue: order-queue
-          order-callback-queue: order-callback-queue
-          production-queue: production-queue
-          production-callback-queue: production-callback-queue
-          payment-queue: payment-queue
-          payment-callback-queue: payment-callback-queue
+      production-queue: production-queue
+      production-callback-queue: production-callback-queue
+      payment-queue: payment-queue
+      payment-callback-queue: payment-callback-queue
 
 server:
   port: 8080
