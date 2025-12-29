@@ -6,4 +6,3 @@ interface OrchestrationUseCase {
     fun handleSaga(event: Event)
     fun startSaga(event: Event)
 }
-

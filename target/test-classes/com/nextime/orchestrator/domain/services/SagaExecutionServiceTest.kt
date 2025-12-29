@@ -39,7 +39,7 @@ class SagaExecutionServiceTest {
             orderId = UUID.randomUUID(),
             payload = null,
             source = EEventSource.ORCHESTRATOR,
-            status = ESagaStatus.FAIL
+            status = ESagaStatus.ROLLBACK_PENDING
         )
 
         assertThrows(SagaStepNotFoundException::class.java) {

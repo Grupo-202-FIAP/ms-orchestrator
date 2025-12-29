@@ -1,6 +1,0 @@
-#Sat Dec 27 19:12:03 BRT 2025
-configuration*?=E50816C050239906B2B1120F533A59B0C347AFAA
-module-resource*?\:suppressions.xml=E3BF87447A2AA3684169495C9A5C2CD93214EA1B
-C\:\\Users\\Administrador\\Documents\\Leor\ things\\pos\\soat\\projeto\\ms-orchestrator\\src\\main\\kotlin\\com\\nextime\\orchestrator\\application\\ports\\out\\MessageProducerPort.java=1766856193752
-C\:\\Users\\Administrador\\Documents\\Leor\ things\\pos\\soat\\projeto\\ms-orchestrator\\src\\main\\kotlin\\com\\nextime\\orchestrator\\application\\config\\sqs\\SqsConfig.java=1766550412681
-C\:\\Users\\Administrador\\Documents\\Leor\ things\\pos\\soat\\projeto\\ms-orchestrator\\src\\main\\kotlin\\com\\nextime\\orchestrator\\application\\gateways\\LoggerPort.java=1766856193751

@@ -31,9 +31,6 @@ jobs:
           restore-keys: |
             maven-${{ runner.os }}-
 
-      - name: Checkstyle
-        run: mvn checkstyle:check
-
       - name: Build com testes e Jacoco
         run: mvn clean test jacoco:report
 

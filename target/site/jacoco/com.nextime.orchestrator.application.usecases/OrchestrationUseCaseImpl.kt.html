@@ -89,11 +89,11 @@ import java.time.LocalDateTime
 <span class="fc" id="L89">    }</span>
 
     fun handleRollback(event: Event) {
-<span class="fc" id="L92">        event.source = EEventSource.ORCHESTRATOR</span>
-<span class="fc" id="L93">        logger.info(&quot;[OrchestrationService.handleRollback] Rollback da saga para o evento com o id: ${event.id}!&quot;)</span>
-<span class="fc" id="L94">        addHistory(event, &quot;Inicializando rollback da saga&quot;)</span>
+<span class="fc" id="L92">        val queues = sagaExecutionService.getAllNextQueues(event)</span>
+<span class="fc" id="L93">        event.source = EEventSource.ORCHESTRATOR</span>
+<span class="fc" id="L94">        logger.info(&quot;[OrchestrationService.handleRollback] Rollback da saga para o evento com o id: ${event.id}!&quot;)</span>
+<span class="fc" id="L95">        addHistory(event, &quot;Inicializando rollback da saga&quot;)</span>
 
-<span class="fc" id="L96">        val queues = sagaExecutionService.getAllNextQueues(event)</span>
 <span class="fc" id="L97">        logger.info(&quot;[OrchestrationService.handleRollback] Enviando evento de rollback para as filas: $queues&quot;)</span>
 
 <span class="fc" id="L99">        queues.forEach { queue -&gt;</span>
