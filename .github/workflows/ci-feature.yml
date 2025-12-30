@@ -86,22 +86,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # ⚠️ essencial
 
-      - name: Criar Pull Request para Dev
+      - name: Criar Pull Request para dev
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: dev
-          branch: ${{ github.ref_name }}
-          title: 'Merge branch ${{ github.ref_name }} into dev'
+          branch: pr/${{ github.ref_name }}-to-dev
+          title: 'Merge ${{ github.ref_name }} → dev'
           body: |
             PR automática da branch `${{ github.ref_name }}` para `dev`.
+  
+            - CI: ✅
+            - Docker build: ✅
           labels: automatic-pr
-          commit-message: '[ci] chore: create PR'
-          signoff: true
-          author: |
-            ${{ github.actor }}
-            <${{ github.actor }}@users.noreply.github.com>
+          commit-message: '[ci] chore: sync branch'
           delete-branch: false
-          always-create: true
-          branch-suffix: timestamp
