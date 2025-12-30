@@ -50,27 +50,3 @@ jobs:
       - name: Derrubar containers
         if: always()
         run: docker compose down -v
-
-
-  pr-hom:
-    name: Criar PR para hom
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Criar Pull Request para Hom
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: hom
-          branch: dev
-          title: 'Merge dev into hom'
-          body: |
-            PR automática da branch `dev` para `hom`.
-          labels: automatic-pr
-          commit-message: '[ci] chore: create PR'
-          signoff: true
-          delete-branch: false
-          always-create: true

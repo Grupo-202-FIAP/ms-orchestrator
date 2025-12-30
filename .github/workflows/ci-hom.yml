@@ -63,27 +63,3 @@ jobs:
       - name: Derrubar containers
         if: always()
         run: docker compose down -v
-
-
-  pr-main:
-    name: Criar PR para main
-    runs-on: ubuntu-latest
-    needs: test-and-build
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Criar Pull Request para Main
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: main
-          branch: hom
-          title: 'Merge hom into main'
-          body: |
-            PR automática da branch `hom` para `main`.
-          labels: automatic-pr
-          commit-message: '[ci] chore: create PR'
-          signoff: true
-          delete-branch: false
-          always-create: true
