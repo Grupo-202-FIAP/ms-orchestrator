@@ -40,15 +40,17 @@ jobs:
         run: |
           echo "Aguardando LocalStack..."
           for i in {1..30}; do
-            STATUS=$(docker inspect --format='{{.State.Health.Status}}' localstack || true)
-            if [ "$STATUS" = "healthy" ]; then
-              echo "LocalStack pronto!"
-              exit 0
-            fi
-            sleep 5
+          STATUS=$(docker compose ps --format json orchestrator-localstack | jq -r '.[0].Health')
+          if [ "$STATUS" = "healthy" ]; then
+           echo "LocalStack pronto!"
+           exit 0
+          fi
+          sleep 5
           done
-          docker logs localstack
-          exit 1
+          
+          echo "LocalStack não ficou saudável a tempo"
+          docker compose logs orchestrator-localstack
+          exit 1      
 
       - name: Rodar testes (unit + integration)
         run: mvn clean verify

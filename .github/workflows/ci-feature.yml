@@ -33,8 +33,6 @@ jobs:
           restore-keys: |
             maven-${{ runner.os }}-
 
-      # Docker Compose já vem instalado no runner,
-      # não precisa instalar manualmente
       - name: Verificar Docker Compose
         run: docker compose version
 
@@ -45,16 +43,18 @@ jobs:
         run: |
           echo "Aguardando LocalStack..."
           for i in {1..30}; do
-            STATUS=$(docker inspect --format='{{.State.Health.Status}}' localstack || true)
+            STATUS=$(docker compose ps --format json orchestrator-localstack | jq -r '.[0].Health')
             if [ "$STATUS" = "healthy" ]; then
               echo "LocalStack pronto!"
               exit 0
             fi
             sleep 5
           done
+          
           echo "LocalStack não ficou saudável a tempo"
-          docker logs localstack
+          docker compose logs orchestrator-localstack
           exit 1
+      
 
       - name: Rodar testes (unit + integration)
         run: mvn clean verify
