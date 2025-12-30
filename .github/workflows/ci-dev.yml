@@ -36,30 +36,13 @@ jobs:
       - name: Subir LocalStack
         run: docker compose up -d orchestrator-localstack
 
-      - name: Aguardar LocalStack ficar saudável
+      - name: Garantir permissão do init-aws.sh
+        run: chmod +x ./local/init-aws.sh
+
+      - name: Aguardar LocalStack
         run: |
-          echo "Aguardando LocalStack..."
-          
-          CONTAINER_ID=$(docker compose ps -q orchestrator-localstack)
-          
-          if [ -z "$CONTAINER_ID" ]; then
-            echo "Container do LocalStack não encontrado"
-            docker compose ps
-            exit 1
-          fi
-          
-          for i in {1..30}; do
-            STATUS=$(docker inspect --format='{{.State.Health.Status}}' "$CONTAINER_ID" || true)
-            if [ "$STATUS" = "healthy" ]; then
-              echo "LocalStack pronto!"
-              exit 0
-            fi
-            sleep 5
-          done
-          
-          echo "LocalStack não ficou saudável a tempo"
-          docker logs "$CONTAINER_ID"
-          exit 1   
+          echo "Aguardando LocalStack subir..."
+          sleep 25
 
       - name: Rodar testes (unit + integration)
         run: mvn clean verify

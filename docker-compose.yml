@@ -46,11 +46,6 @@ services:
       - "./localstack:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./local/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:4566/health" ]
-      interval: 5s
-      timeout: 5s
-      retries: 10
 
 networks:
   orchestrator-network:
