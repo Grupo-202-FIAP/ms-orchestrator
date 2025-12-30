@@ -15,6 +15,7 @@ services:
       - AWS_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
+      - AWS_ENDPOINT=http://orchestrator-localstack:4566
       - SQS_ORDER_QUEUE=order-queue
       - SQS_ORDER_CALLBACK_QUEUE=order-callback-queue
       - SQS_PAYMENT_QUEUE=payment-queue
@@ -24,11 +25,12 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - orchestrator-localstack
+      orchestrator-localstack:
+        condition: service_healthy
 
   orchestrator-localstack:
     image: localstack/localstack:latest
-    container_name: localstack
+    container_name: orchestrator-localstack
     ports:
       - "4566:4566"
     environment:
@@ -44,6 +46,11 @@ services:
       - "./localstack:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./local/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4566/health" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 networks:
   orchestrator-network:

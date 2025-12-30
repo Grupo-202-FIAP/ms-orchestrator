@@ -10,7 +10,7 @@ spring:
         access-key: ${AWS_ACCESS_KEY_ID:test}
         secret-key: ${AWS_SECRET_ACCESS_KEY:test}
       sqs:
-        endpoint: http://localstack:4566
+        endpoint: ${AWS_ENDPOINT:http://localstack:4566}
 
   sqs:
     queues:
