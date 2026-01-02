@@ -19,11 +19,12 @@ public class SqsConfig {
     @Value("${spring.cloud.aws.region.static}")
     private String region;
 
+    @Value("${spring.cloud.aws.sqs.endpoint}")
+    String endpoint;
+
     @Bean
     @Profile({"local", "test"})
-    public SqsAsyncClient sqsAsyncClientLocal(
-            @Value("${spring.cloud.aws.sqs.endpoint}") String endpoint
-    ) {
+    public SqsAsyncClient sqsAsyncClientLocal() {
         return SqsAsyncClient.builder()
                 .region(Region.of(region))
                 .endpointOverride(URI.create(endpoint))
