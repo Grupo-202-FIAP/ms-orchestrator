@@ -22,11 +22,11 @@ class SagaOrchestratorProducerTest {
     }
 
     class TestSqsConfig(private val client: SqsAsyncClient) : SqsConfig() {
-        override fun sqsAsyncClient(): SqsAsyncClient = client
+        fun sqsAsyncClient(): SqsAsyncClient = client
     }
 
     class ThrowingSqsConfig : SqsConfig() {
-        override fun sqsAsyncClient(): SqsAsyncClient {
+        fun sqsAsyncClient(): SqsAsyncClient {
             throw RuntimeException("boom")
         }
     }
