@@ -37,7 +37,7 @@ public class SqsConfig {
     }
 
     @Bean
-    @Profile({"!local", "!test"})
+    @Profile("!local & !test")
     public SqsAsyncClient sqsAsyncClientEks() {
         return SqsAsyncClient.builder()
                 .region(Region.of(region))

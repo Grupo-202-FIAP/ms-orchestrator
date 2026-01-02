@@ -14,6 +14,6 @@ import org.springframework.test.context.ActiveProfiles
     key = Constants.GLUE_PROPERTY_NAME,
     value = "integration"
 )
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 class OrchestratorApplicationIntegrationTests {
 }
