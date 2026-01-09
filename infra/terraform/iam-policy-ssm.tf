@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "ms_orchestrator_ssm" {
-  name = "ms-order-ssm-policy"
+  name = "ms-orchestrator-ssm-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
