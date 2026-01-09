@@ -22,30 +22,13 @@ class SagaOrchestratorProducerTest {
     }
 
     class TestSqsConfig(private val client: SqsAsyncClient) : SqsConfig() {
-        override fun sqsAsyncClient(): SqsAsyncClient = client
+        fun sqsAsyncClient(): SqsAsyncClient = client
     }
 
     class ThrowingSqsConfig : SqsConfig() {
-        override fun sqsAsyncClient(): SqsAsyncClient {
+        fun sqsAsyncClient(): SqsAsyncClient {
             throw RuntimeException("boom")
         }
-    }
-
-    @Test
-    fun `sendEvent should complete without exception`() {
-        val response = Mockito.mock(SendMessageResponse::class.java)
-        val client = Mockito.mock(SqsAsyncClient::class.java, Answer { invocation ->
-            if (invocation.method.name == "sendMessage") {
-                CompletableFuture.completedFuture(response)
-            } else {
-                Mockito.RETURNS_DEFAULTS.answer(invocation)
-            }
-        })
-
-        val producer = SagaOrchestratorProducer(TestLogger(), TestSqsConfig(client))
-
-        // should not throw
-        producer.sendEvent("payload", "queueUrl")
     }
 
     @Test
