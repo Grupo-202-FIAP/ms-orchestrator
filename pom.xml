@@ -33,7 +33,7 @@
         <spring-cloud-aws-starter-sqs.version>4.0.0-M1</spring-cloud-aws-starter-sqs.version>
         <mockk.version>1.14.7</mockk.version>
         <jacoco.version>0.8.11</jacoco.version>
-        <cucumber-java.version>7.15.0</cucumber-java.version>
+        <cucumber-java.version>7.33.0</cucumber-java.version>
     </properties>
     <dependencies>
         <!-- Spring core -->
