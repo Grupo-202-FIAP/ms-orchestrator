@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-orchestrator
+  namespace: default
+  labels:
+    app: ms-orchestrator
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms-orchestrator
+  template:
+    metadata:
+      labels:
+        app: ms-orchestrator
+        tags.datadoghq.com/service: ms-orchestrator
+        tags.datadoghq.com/env: dev
+        tags.datadoghq.com/version: "1.0.0"
+    spec:
+      serviceAccountName: ms-orchestrator-sa
+      containers:
+        - name: ms-orchestrator
+          image: 056075870573.dkr.ecr.us-east-1.amazonaws.com/ms-orchestrator:latest
+          ports:
+            - containerPort: 8079
+          envFrom:
+            - configMapRef:
+                name: ms-orchestrator-config
+          env:
+            - name: DD_SERVICE
+              value: ms-orchestrator
+            - name: DD_ENV
+              value: dev
+            - name: DD_VERSION
+              value: "1.0.0"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8079
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8079
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
