@@ -33,6 +33,9 @@ jobs:
       - name: Verificar Docker Compose
         run: docker compose version
 
+      - name: Garantir permissão do init-aws.sh
+        run: chmod +x ./local/init-aws.sh
+
       - name: Subir LocalStack
         run: docker compose up -d orchestrator-localstack
 
@@ -47,6 +50,10 @@ jobs:
           done
           docker logs orchestrator-localstack
           exit 1
+
+      - name: Criar filas SQS no LocalStack
+        run: |
+          docker exec orchestrator-localstack /bin/bash /etc/localstack/init/ready.d/init-aws.sh
 
       - name: Rodar testes (unit + integration)
         run: mvn clean verify
