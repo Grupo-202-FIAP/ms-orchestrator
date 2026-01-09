@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ms_orchestrator_irsa" {
-  name = "ms-order-irsa"
+  name = "ms-orchestrator-irsa"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

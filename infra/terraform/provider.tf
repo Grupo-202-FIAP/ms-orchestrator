@@ -10,7 +10,7 @@ terraform {
 
   backend "s3" {
     bucket         = "nextime-food-state-bucket"
-    key            = "ms-order/terraform.tfstate"
+    key            = "ms-orchestrator/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
   }
@@ -21,7 +21,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project     = "ms-order"
+      Project     = "ms-orchestrator"
       Environment  = var.environment
       ManagedBy   = "Terraform"
     }
