@@ -18,10 +18,10 @@ import org.springframework.stereotype.Component
 <span class="fc" id="L18">                &quot;[SagaOrchestratorProducer.sendEvent] Iniciando publicação na fila: {}&quot;,</span>
 <span class="fc" id="L19">                queueUrl</span>
             )
-<span class="fc" id="L21">            sqsConfig.sqsAsyncClient().sendMessage { builder -&gt;</span>
-<span class="nc" id="L22">                builder.queueUrl(queueUrl)</span>
-<span class="nc" id="L23">                builder.messageBody(payload)</span>
-<span class="nc" id="L24">            }</span>
+<span class="pc bpc" id="L21" title="1 of 2 branches missed.">            sqsConfig.sqsAsyncClientLocal()?.sendMessage { builder -&gt;</span>
+<span class="fc" id="L22">                builder.queueUrl(queueUrl)</span>
+<span class="fc" id="L23">                builder.messageBody(payload)</span>
+<span class="fc" id="L24">            }</span>
 <span class="fc" id="L25">        } catch (ex: Exception) {</span>
 <span class="fc" id="L26">            logger.error(&quot;[SagaOrchestratorProducer.sendEvent] Falha ao publicar a mensagem an fila {}&quot;, queueUrl)</span>
 <span class="fc" id="L27">            throw MessagePublishException(queueUrl, ex)</span>
