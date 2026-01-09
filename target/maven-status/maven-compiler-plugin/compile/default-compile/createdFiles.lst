@@ -1,3 +1,2 @@
-com\nextime\orchestrator\application\config\sqs\SqsConfig.class
 com\nextime\orchestrator\application\ports\out\MessageProducerPort.class
 com\nextime\orchestrator\application\gateways\LoggerPort.class
