@@ -21,7 +21,7 @@ spec:
       serviceAccountName: ms-orchestrator-sa
       containers:
         - name: ms-orchestrator
-          image: <ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/ms-orchestrator:latest #Todo: Ajustar id
+          image: 056075870573.dkr.ecr.us-east-1.amazonaws.com/ms-orchestrator:latest
           ports:
             - containerPort: 8079
           envFrom:
@@ -43,7 +43,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
-              port: 8080
+              port: 8079
             initialDelaySeconds: 60
             periodSeconds: 10
             timeoutSeconds: 5
@@ -51,7 +51,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
-              port: 8080
+              port: 8079
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
