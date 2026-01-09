@@ -18,7 +18,7 @@ class SagaOrchestratorProducer(
                 "[SagaOrchestratorProducer.sendEvent] Iniciando publicação na fila: {}",
                 queueUrl
             )
-            sqsConfig.sqsAsyncClientLocal().sendMessage { builder ->
+            sqsConfig.sqsAsyncClientLocal()?.sendMessage { builder ->
                 builder.queueUrl(queueUrl)
                 builder.messageBody(payload)
             }

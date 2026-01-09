@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.nextime.orchestrator.utils.JsonConverterTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.237 s -- in com.nextime.orchestrator.utils.JsonConverterTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.335 s -- in com.nextime.orchestrator.utils.JsonConverterTest
