@@ -11,8 +11,12 @@ resource "aws_iam_policy" "ms_orchestrator_sqs" {
         "sqs:GetQueueAttributes"
       ]
       Resource = [
-        # data.aws_sqs_queue.order_queue.arn,
-        # data.aws_sqs_queue.order_callback_queue.arn
+        data.terraform_remote_state.sqs.outputs.sqs_queue_arns["order-callback-queue"],
+        data.terraform_remote_state.sqs.outputs.sqs_queue_arns["order-queue"],
+        data.terraform_remote_state.sqs.outputs.sqs_queue_arns["payment-callback-queue"],
+        data.terraform_remote_state.sqs.outputs.sqs_queue_arns["payment-queue"],
+        data.terraform_remote_state.sqs.outputs.sqs_queue_arns["production-callback-queue"],
+        data.terraform_remote_state.sqs.outputs.sqs_queue_arns["production-queue"],
       ]
     }]
   })

@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "ms_orchestrator_ssm" {
-  name = "ms-orchestrator-ssm-policy"
+  name = "ms-order-ssm-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -9,7 +9,7 @@ resource "aws_iam_policy" "ms_orchestrator_ssm" {
         "ssm:GetParameter",
         "ssm:GetParameters"
       ]
-      Resource = "arn:aws:ssm:${data.aws_region.current.name}:<ACCOUNT_ID>:parameter/ms-orchestrator/*" //ToDo: ajustar
+      Resource = "arn:aws:ssm:${var.aws_region}:056075870573:parameter/*"
     }]
   })
 }
