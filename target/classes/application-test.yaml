@@ -1,0 +1,21 @@
+spring:
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION:us-east-1}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID:test}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:test}
+      sqs:
+        endpoint: ${AWS_ENDPOINT:http://localstack:4566}
+        listener:
+          auto-startup: false
+
+  sqs:
+    queues:
+      order-queue: ${SQS_ORDER_QUEUE:order-queue}
+      order-callback-queue: ${SQS_ORDER_CALLBACK_QUEUE:order-callback-queue}
+      production-queue: ${SQS_PRODUCTION_QUEUE:production-queue}
+      production-callback-queue: ${SQS_PRODUCTION_CALLBACK_QUEUE:production-callback-queue}
+      payment-queue: ${SQS_PAYMENT_QUEUE:payment-queue}
+      payment-callback-queue: ${SQS_PAYMENT_CALLBACK_QUEUE:payment-callback-queue}
