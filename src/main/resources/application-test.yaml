@@ -7,7 +7,7 @@ spring:
         access-key: test
         secret-key: test
       sqs:
-        endpoint: http://localstack:4566
+        endpoint: http://localhost:4566
         listener:
           auto-startup: false
 
