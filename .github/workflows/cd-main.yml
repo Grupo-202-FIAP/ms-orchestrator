@@ -42,9 +42,6 @@ jobs:
       - name: Verificar Docker Compose
         run: docker compose version
 
-      - name: Subir LocalStack (Ambiente de Teste)
-        run: docker compose up -d payment-localstack
-
       - name: Garantir permissão do init-aws.sh
 
         run: chmod +x ./local/init-aws.sh || true
