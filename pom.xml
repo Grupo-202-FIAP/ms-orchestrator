@@ -182,7 +182,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>report</id>
+                        <id>verify</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
