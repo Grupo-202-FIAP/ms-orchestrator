@@ -9,6 +9,8 @@ spring:
         use-default-provider: false
       sqs:
         endpoint: http://localhost:4566
+        listener:
+          auto-startup: false
 
   sqs:
     queues:
