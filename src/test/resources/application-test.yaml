@@ -6,6 +6,7 @@ spring:
       credentials:
         access-key: test
         secret-key: test
+        use-default-provider: false
       sqs:
         endpoint: http://localhost:4566
 

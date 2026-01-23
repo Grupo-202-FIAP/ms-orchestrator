@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.SqsClient
 import java.net.URI
 
@@ -16,8 +17,8 @@ class SqsTestConfig {
 
     @Bean
     @Primary
-    fun sqsTestClient(): SqsClient =
-        SqsClient.builder()
+    fun sqsAsyncClient(): SqsAsyncClient =
+        SqsAsyncClient.builder()
             .endpointOverride(URI.create("http://localhost:4566"))
             .region(Region.US_EAST_1)
             .credentialsProvider(
@@ -28,10 +29,16 @@ class SqsTestConfig {
             .build()
 
     @Bean
-    fun consumeMessage(): ConsumeMessage =
-        ConsumeMessage()
+    fun sqsClient(sqsAsyncClient: SqsAsyncClient): SqsClient =
+        SqsClient.builder()
+            .endpointOverride(URI.create("http://localhost:4566"))
+            .region(Region.US_EAST_1)
+            .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")))
+            .build()
 
     @Bean
-    fun sqsTestSupport(sqsClient: SqsClient): SqsTestSupport =
-        SqsTestSupport(sqsClient)
+    fun consumeMessage(): ConsumeMessage = ConsumeMessage()
+
+    @Bean
+    fun sqsTestSupport(sqsClient: SqsClient): SqsTestSupport = SqsTestSupport(sqsClient)
 }
