@@ -26,6 +26,7 @@ class InvalidSagaEventExceptionTest {
         val exception = InvalidSagaEventException()
 
         assertTrue(exception is RuntimeException)
+        assertNotNull(exception as? RuntimeException)
     }
 }
 

@@ -19,7 +19,7 @@ class MessageConsumeExceptionTest {
     fun `MessageConsumeException should be instance of RuntimeException`() {
         val exception = MessageConsumeException("Test", RuntimeException())
 
-        assertTrue(exception is RuntimeException)
+        assertNotNull(exception as? RuntimeException)
     }
 }
 

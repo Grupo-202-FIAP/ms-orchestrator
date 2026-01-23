@@ -23,7 +23,7 @@ class SagaStepNotFoundExceptionTest {
     fun `SagaStepNotFoundException should be instance of RuntimeException`() {
         val exception = SagaStepNotFoundException(EEventSource.PRODUCTION, ESagaStatus.SUCCESS)
 
-        assertTrue(exception is RuntimeException)
+        assertNotNull(exception as? RuntimeException)
     }
 
     @Test

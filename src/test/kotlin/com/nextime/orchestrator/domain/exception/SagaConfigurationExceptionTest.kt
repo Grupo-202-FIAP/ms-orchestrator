@@ -17,7 +17,7 @@ class SagaConfigurationExceptionTest {
     fun `SagaConfigurationException should be instance of RuntimeException`() {
         val exception = SagaConfigurationException("Test")
 
-        assertTrue(exception is RuntimeException)
+        assertNotNull(exception as? RuntimeException)
     }
 }
 
