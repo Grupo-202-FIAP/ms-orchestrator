@@ -28,7 +28,7 @@ class SagaProcessingExceptionTest {
     fun `SagaProcessingException should be instance of RuntimeException`() {
         val exception = SagaProcessingException("Test")
 
-        assertTrue(exception is RuntimeException)
+        assertNotNull(exception as? RuntimeException)
     }
 }
 
