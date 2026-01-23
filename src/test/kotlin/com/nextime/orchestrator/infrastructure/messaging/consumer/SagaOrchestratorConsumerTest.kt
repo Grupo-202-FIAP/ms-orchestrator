@@ -56,7 +56,48 @@ class SagaOrchestratorConsumerTest {
             consumer.consumeProductionCallbackQueue("{}")
         }
     }
+
+    @Test
+    fun `consumeStartSagaEvent should call startSaga on usecase`() {
+        val logger = TestLogger()
+        val usecase = Mockito.mock(OrchestrationUseCase::class.java)
+        val jsonConverter = Mockito.mock(JsonConverter::class.java)
+
+        val event = com.nextime.orchestrator.domain.Event(
+            id = java.util.UUID.randomUUID(),
+            transactionId = java.util.UUID.randomUUID(),
+            orderId = java.util.UUID.randomUUID(),
+            payload = null,
+            source = null,
+            status = null
+        )
+
+        Mockito.`when`(jsonConverter.toEvent(Mockito.any(String::class.java))).thenReturn(event)
+
+        val consumer = SagaOrchestratorConsumer(logger, usecase, jsonConverter)
+
+        consumer.consumeStartSagaEvent("{}")
+
+        Mockito.verify(usecase).startSaga(event)
+    }
+
+    @Test
+    fun `consumeStartSagaEvent when converter throws should propagate exception`() {
+        val logger = TestLogger()
+        val usecase = Mockito.mock(OrchestrationUseCase::class.java)
+        val jsonConverter = Mockito.mock(JsonConverter::class.java)
+
+        Mockito.`when`(jsonConverter.toEvent(Mockito.any(String::class.java))).thenThrow(RuntimeException("conversion error"))
+
+        val consumer = SagaOrchestratorConsumer(logger, usecase, jsonConverter)
+
+        assertThrows(RuntimeException::class.java) {
+            consumer.consumeStartSagaEvent("{}")
+        }
+    }
 }
+
+
 
 
 

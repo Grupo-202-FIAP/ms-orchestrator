@@ -6,9 +6,9 @@ metadata:
 data:
   SPRING_PROFILES_ACTIVE: dev
   AWS_REGION: us-east-1
-  SPRING_SQS_QUEUES_ORDER_QUEUE: https://sqs.us-east-1.amazonaws.com/056075870573/order-queue
-  SPRING_SQS_QUEUES_ORDER_CALLBACK_QUEUE: https://sqs.us-east-1.amazonaws.com/056075870573/order-callback-queue
-  SPRING_SQS_QUEUES_PRODUCTION_QUEUE: https://sqs.us-east-1.amazonaws.com/056075870573/payment-queue
-  SPRING_SQS_QUEUES_PRODUCTION_CALLBACK_QUEUE: https://sqs.us-east-1.amazonaws.com/056075870573/payment-callback-queue
-  SPRING_SQS_QUEUES_PAYMENT_QUEUE: https://sqs.us-east-1.amazonaws.com/056075870573/production-queue
-  SPRING_SQS_QUEUES_PAYMENT_CALLBACK_QUEUE: https://sqs.us-east-1.amazonaws.com/056075870573/production-callback-queue
+  SPRING_SQS_QUEUES_ORDER_QUEUE: https://sqs.us-east-1.amazonaws.com/500782030170/order-queue
+  SPRING_SQS_QUEUES_ORDER_CALLBACK_QUEUE: https://sqs.us-east-1.amazonaws.com/500782030170/order-callback-queue
+  SPRING_SQS_QUEUES_PRODUCTION_QUEUE: https://sqs.us-east-1.amazonaws.com/500782030170/payment-queue
+  SPRING_SQS_QUEUES_PRODUCTION_CALLBACK_QUEUE: https://sqs.us-east-1.amazonaws.com/500782030170/payment-callback-queue
+  SPRING_SQS_QUEUES_PAYMENT_QUEUE: https://sqs.us-east-1.amazonaws.com/500782030170/production-queue
+  SPRING_SQS_QUEUES_PAYMENT_CALLBACK_QUEUE: https://sqs.us-east-1.amazonaws.com/500782030170/production-callback-queue

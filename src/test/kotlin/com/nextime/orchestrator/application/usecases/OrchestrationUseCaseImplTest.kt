@@ -189,4 +189,136 @@ class OrchestrationUseCaseImplTest {
 
         assert((messageProducer as TestMessageProducer).sends.size == 2)
     }
+
+    @Test
+    fun `handleSaga with SUCCESS and not finished should call continueSaga`() {
+        val event = Event(
+            id = UUID.randomUUID(),
+            transactionId = UUID.randomUUID(),
+            orderId = UUID.randomUUID(),
+            payload = null,
+            source = EEventSource.PAYMENT,
+            status = ESagaStatus.SUCCESS
+        )
+
+        val testService = object : SagaExecutionService() {
+            override fun isSagaFinished(event: Event): Boolean = false
+            override fun getNextQueue(event: Event): EQueues = EQueues.PRODUCTION_QUEUE
+        }
+
+        val usecaseWithTestService = OrchestrationUseCaseImpl(
+            logger,
+            jsonConverter,
+            testService,
+            messageProducer
+        )
+
+        usecaseWithTestService.handleSaga(event)
+
+        assert((messageProducer as TestMessageProducer).sends.size == 1)
+    }
+
+    @Test
+    fun `handleSaga with SUCCESS and finished should call finishSagaSuccess`() {
+        val event = Event(
+            id = UUID.randomUUID(),
+            transactionId = UUID.randomUUID(),
+            orderId = UUID.randomUUID(),
+            payload = null,
+            source = EEventSource.PRODUCTION,
+            status = ESagaStatus.SUCCESS
+        )
+
+        val testService = object : SagaExecutionService() {
+            override fun isSagaFinished(event: Event): Boolean = true
+            override fun getNextQueue(event: Event): EQueues = EQueues.ORDER_CALLBACK_QUEUE
+        }
+
+        val usecaseWithTestService = OrchestrationUseCaseImpl(
+            logger,
+            jsonConverter,
+            testService,
+            messageProducer
+        )
+
+        usecaseWithTestService.handleSaga(event)
+
+        assert((messageProducer as TestMessageProducer).sends.size == 1)
+        assert((messageProducer as TestMessageProducer).sends.first().second == EQueues.ORDER_CALLBACK_QUEUE.queueName)
+    }
+
+    @Test
+    fun `handleSaga with FAIL should call finishSagaFail`() {
+        val event = Event(
+            id = UUID.randomUUID(),
+            transactionId = UUID.randomUUID(),
+            orderId = UUID.randomUUID(),
+            payload = null,
+            source = EEventSource.PAYMENT,
+            status = ESagaStatus.FAIL
+        )
+
+        val testService = object : SagaExecutionService() {
+            override fun getNextQueue(event: Event): EQueues = EQueues.ORDER_CALLBACK_QUEUE
+        }
+
+        val usecaseWithTestService = OrchestrationUseCaseImpl(
+            logger,
+            jsonConverter,
+            testService,
+            messageProducer
+        )
+
+        usecaseWithTestService.handleSaga(event)
+
+        assert((messageProducer as TestMessageProducer).sends.size == 1)
+        assert((messageProducer as TestMessageProducer).sends.first().second == EQueues.ORDER_CALLBACK_QUEUE.queueName)
+    }
+
+    @Test
+    fun `handleSaga with ROLLBACK_PENDING should call handleRollback`() {
+        val event = Event(
+            id = UUID.randomUUID(),
+            transactionId = UUID.randomUUID(),
+            orderId = UUID.randomUUID(),
+            payload = null,
+            source = EEventSource.PAYMENT,
+            status = ESagaStatus.ROLLBACK_PENDING
+        )
+
+        val testService = object : SagaExecutionService() {
+            override fun getAllNextQueues(event: Event): List<EQueues> = listOf(EQueues.PAYMENT_QUEUE, EQueues.PRODUCTION_QUEUE)
+        }
+
+        val usecaseWithTestService = OrchestrationUseCaseImpl(
+            logger,
+            jsonConverter,
+            testService,
+            messageProducer
+        )
+
+        usecaseWithTestService.handleSaga(event)
+
+        assert((messageProducer as TestMessageProducer).sends.size == 2)
+    }
+
+    @Test
+    fun `startSaga should add history to event`() {
+        val event = Event(
+            id = UUID.randomUUID(),
+            transactionId = UUID.randomUUID(),
+            orderId = UUID.randomUUID(),
+            payload = null,
+            source = null,
+            status = null
+        )
+
+        (sagaExecutionService as TestSagaExecutionService).queuesToReturn = listOf(EQueues.PRODUCTION_QUEUE)
+
+        usecase.startSaga(event)
+
+        assert(event.source == EEventSource.ORCHESTRATOR)
+        assert(event.status == ESagaStatus.SUCCESS)
+        assert(event.eventHistory.isNotEmpty())
+    }
 }
