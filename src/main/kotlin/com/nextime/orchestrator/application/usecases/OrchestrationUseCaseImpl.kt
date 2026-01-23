@@ -73,16 +73,12 @@ class OrchestrationUseCaseImpl(
     }
 
     fun finishSagaSuccess(event: Event) {
-        event.source = EEventSource.ORCHESTRATOR
-        event.status = ESagaStatus.SUCCESS
         logger.info("[OrchestrationService.finishSagaSuccess] Saga finalizada com sucesso para o evento do id: ${event.id}!")
         addHistory(event, "Saga finalizada com sucesso!")
         notifyFinishedSaga(event)
     }
 
     fun finishSagaFail(event: Event) {
-        event.source = EEventSource.ORCHESTRATOR
-        event.status = ESagaStatus.FAIL
         logger.info("[OrchestrationService.finishSagaFail] Saga finalizada com erro para o evento com id: ${event.id}!")
         addHistory(event, "Saga finalizada com erros")
         notifyFinishedSaga(event)
@@ -90,7 +86,6 @@ class OrchestrationUseCaseImpl(
 
     fun handleRollback(event: Event) {
         val queues = sagaExecutionService.getAllNextQueues(event)
-        event.source = EEventSource.ORCHESTRATOR
         logger.info("[OrchestrationService.handleRollback] Rollback da saga para o evento com o id: ${event.id}!")
         addHistory(event, "Inicializando rollback da saga")
 

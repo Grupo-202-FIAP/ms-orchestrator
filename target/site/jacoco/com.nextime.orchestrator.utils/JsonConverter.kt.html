@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonConverter.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">orchestrator</a> &gt; <a href="index.source.html" class="el_package">com.nextime.orchestrator.utils</a> &gt; <span class="el_source">JsonConverter.kt</span></div><h1>JsonConverter.kt</h1><pre class="source lang-java linenums">package com.nextime.orchestrator.utils
+
+import com.nextime.orchestrator.application.gateways.LoggerPort
+import com.nextime.orchestrator.domain.Event
+import org.springframework.stereotype.Component
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+
+<span class="fc" id="L10">@Component</span>
+<span class="fc" id="L11">class JsonConverter(</span>
+<span class="fc" id="L12">    private val logger: LoggerPort</span>
+) {
+
+<span class="fc" id="L15">    private val objectMapper: ObjectMapper = jacksonObjectMapper()</span>
+<span class="fc" id="L16">        .registerModule(JavaTimeModule())</span>
+
+    fun toJson(value: Any): String =
+<span class="fc" id="L19">        try {</span>
+<span class="fc" id="L20">            objectMapper.writeValueAsString(value)</span>
+<span class="nc" id="L21">        } catch (ex: Exception) {</span>
+<span class="nc" id="L22">            logger.error(</span>
+<span class="nc" id="L23">                &quot;[toJson] Falha para converter objeto para JSON&quot;,</span>
+<span class="nc" id="L24">                ex</span>
+            )
+<span class="pc" id="L26">            throw RuntimeException(</span>
+<span class="nc" id="L27">                &quot;[toJson] Falha para converter objeto para JSON&quot;,</span>
+<span class="nc" id="L28">                ex</span>
+            )
+<span class="fc" id="L30">        }</span>
+
+    fun toEvent(json: String?): Event =
+<span class="fc" id="L33">        try {</span>
+<span class="fc" id="L34">            objectMapper.readValue(json, Event::class.java)</span>
+<span class="fc" id="L35">        } catch (ex: Exception) {</span>
+<span class="fc" id="L36">            logger.error(</span>
+<span class="fc" id="L37">                &quot;[toEvent] Falha para converter JSON para Event&quot;,</span>
+<span class="fc" id="L38">                ex</span>
+            )
+<span class="fc" id="L40">            throw RuntimeException(</span>
+<span class="fc" id="L41">                &quot;[toEvent] Falha para converter JSON para Event&quot;,</span>
+<span class="fc" id="L42">                ex</span>
+            )
+<span class="fc" id="L44">        }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
