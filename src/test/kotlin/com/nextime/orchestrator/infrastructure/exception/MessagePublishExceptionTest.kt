@@ -31,7 +31,7 @@ class MessagePublishExceptionTest {
     fun `MessagePublishException should be instance of RuntimeException`() {
         val exception = MessagePublishException("queue", RuntimeException())
 
-        assertTrue(exception is RuntimeException)
+        assertNotNull(exception as? RuntimeException)
     }
 }
 
