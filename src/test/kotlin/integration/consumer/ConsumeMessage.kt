@@ -13,7 +13,7 @@ class ConsumeMessage {
         val request = ReceiveMessageRequest.builder()
             .queueUrl(queueUrl)
             .maxNumberOfMessages(maxMessages)
-            .waitTimeSeconds(1)
+            .waitTimeSeconds(3) // Aumentado para dar mais tempo para a mensagem estar disponível
             .visibilityTimeout(0)
             .build()
 

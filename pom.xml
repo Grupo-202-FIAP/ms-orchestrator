@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.1</version>
+        <version>3.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.nextime</groupId>
@@ -30,7 +30,7 @@
         <java.version>17</java.version>
         <kotlin.version>2.2.21</kotlin.version>
         <logstash-logback-encoder.version>8.1</logstash-logback-encoder.version>
-        <spring-cloud-aws-starter-sqs.version>4.0.0-M1</spring-cloud-aws-starter-sqs.version>
+        <spring-cloud-aws.version>3.3.0</spring-cloud-aws.version>
         <mockk.version>1.14.7</mockk.version>
         <jacoco.version>0.8.11</jacoco.version>
         <cucumber-java.version>7.15.0</cucumber-java.version>
@@ -69,7 +69,7 @@
 
         <!-- JSON -->
         <dependency>
-            <groupId>tools.jackson.module</groupId>
+            <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
         </dependency>
 
@@ -84,7 +84,6 @@
         <dependency>
             <groupId>io.awspring.cloud</groupId>
             <artifactId>spring-cloud-aws-starter-sqs</artifactId>
-            <version>${spring-cloud-aws-starter-sqs.version}</version>
         </dependency>
 
         <!-- Testes -->
@@ -135,7 +134,24 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sts</artifactId>
+        </dependency>
+
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.awspring.cloud</groupId>
+                <artifactId>spring-cloud-aws-dependencies</artifactId>
+                <version>${spring-cloud-aws.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <finalName>app</finalName>

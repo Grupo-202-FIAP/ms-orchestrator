@@ -84,6 +84,9 @@ class OrchestrationUseCaseImplTest {
 
     @Test
     fun `handleSaga when producer throws should wrap in SagaProcessingException`() {
+        // Create a working jsonConverter that can serialize events without LocalDateTime issues
+        val workingJsonConverter = JsonConverter(logger)
+        
         // to simulate producer throwing, we create a producer that throws
         val throwingProducer = object : MessageProducerPort {
             override fun sendEvent(message: String, queueName: String) {
@@ -93,7 +96,7 @@ class OrchestrationUseCaseImplTest {
 
         val usecaseWithThrowingProducer = OrchestrationUseCaseImpl(
             logger,
-            jsonConverter,
+            workingJsonConverter,
             sagaExecutionService,
             throwingProducer
         )
@@ -102,7 +105,7 @@ class OrchestrationUseCaseImplTest {
             id = UUID.randomUUID(),
             transactionId = UUID.randomUUID(),
             orderId = UUID.randomUUID(),
-            payload = null,
+            payload = null, // null payload to avoid LocalDateTime serialization issues
             source = null,
             status = null
         )
