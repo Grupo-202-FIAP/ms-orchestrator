@@ -27,18 +27,18 @@ import java.time.LocalDateTime
 <span class="fc" id="L27">        try {</span>
 <span class="fc" id="L28">            when {</span>
                 // Evento nunca processado → start
-<span class="pc bpc" id="L30" title="3 of 4 branches missed.">                event.source == null || event.status == null -&gt; startSaga(event)</span>
+<span class="pc bpc" id="L30" title="1 of 4 branches missed.">                event.source == null || event.status == null -&gt; startSaga(event)</span>
 
                 // Evento terminou produção ou pagamento com sucesso → continue
-<span class="nc bnc" id="L33" title="All 4 branches missed.">                event.status == ESagaStatus.SUCCESS &amp;&amp; !isSagaFinished(event) -&gt; continueSaga(event)</span>
+<span class="fc bfc" id="L33" title="All 4 branches covered.">                event.status == ESagaStatus.SUCCESS &amp;&amp; !isSagaFinished(event) -&gt; continueSaga(event)</span>
 
                 // Evento falhou → finalizar com erro
-<span class="nc bnc" id="L36" title="All 2 branches missed.">                event.status == ESagaStatus.FAIL -&gt; finishSagaFail(event)</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">                event.status == ESagaStatus.FAIL -&gt; finishSagaFail(event)</span>
 
                 // Evento terminou produção → finaliza saga
-<span class="nc bnc" id="L39" title="All 4 branches missed.">                event.status == ESagaStatus.SUCCESS &amp;&amp; isSagaFinished(event) -&gt; finishSagaSuccess(event)</span>
+<span class="pc bpc" id="L39" title="1 of 4 branches missed.">                event.status == ESagaStatus.SUCCESS &amp;&amp; isSagaFinished(event) -&gt; finishSagaSuccess(event)</span>
 
-<span class="nc bnc" id="L41" title="All 2 branches missed.">                event.status == ESagaStatus.ROLLBACK_PENDING -&gt; handleRollback(event)</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">                event.status == ESagaStatus.ROLLBACK_PENDING -&gt; handleRollback(event)</span>
 
 <span class="nc" id="L43">                else -&gt; logger.warn(&quot;[OrchestrationService.handleSaga] evento não mapeado no fluxo: $event&quot;)</span>
             }
@@ -118,7 +118,7 @@ import java.time.LocalDateTime
 <span class="fc" id="L118">    }</span>
 
     private fun isSagaFinished(event: Event): Boolean {
-<span class="nc" id="L121">        return sagaExecutionService.isSagaFinished(event)</span>
+<span class="fc" id="L121">        return sagaExecutionService.isSagaFinished(event)</span>
     }
 
     private fun notifyFinishedSaga(event: Event) {

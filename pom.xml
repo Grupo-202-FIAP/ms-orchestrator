@@ -34,6 +34,16 @@
         <mockk.version>1.14.7</mockk.version>
         <jacoco.version>0.8.11</jacoco.version>
         <cucumber-java.version>7.15.0</cucumber-java.version>
+        <sonar.coverage.exclusions>
+            **/domain/**,
+            **/*OrderApplication.java
+        </sonar.coverage.exclusions>
+
+        <!-- SonarQube/SonarCloud: Excluir da análise de código também (opcional) -->
+        <sonar.exclusions>
+            **/domain/**,
+            **/*OrchestratorApplication.kt
+        </sonar.exclusions>
     </properties>
     <dependencies>
         <!-- Spring core -->
@@ -168,6 +178,12 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/domain/**</exclude>
+                        <exclude>**/*Application.*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
