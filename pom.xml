@@ -44,6 +44,7 @@
             **/domain/**,
             **/*OrchestratorApplication.kt
         </sonar.exclusions>
+        <sts.version>2.22.10</sts.version>
     </properties>
     <dependencies>
         <!-- Spring core -->
@@ -138,6 +139,7 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>sts</artifactId>
+            <version>${sts.version}</version>
         </dependency>
 
     </dependencies>
