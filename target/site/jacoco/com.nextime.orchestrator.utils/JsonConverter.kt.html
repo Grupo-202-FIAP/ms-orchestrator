@@ -6,40 +6,40 @@ import org.springframework.stereotype.Component
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.module.kotlin.jacksonObjectMapper
 
-<span class="fc" id="L9">@Component</span>
+@Component
 <span class="fc" id="L10">class JsonConverter(</span>
 <span class="fc" id="L11">    private val logger: LoggerPort</span>
-) {
+<span class="fc" id="L12">) {</span>
 
-<span class="fc" id="L14">    private val objectMapper: ObjectMapper = jacksonObjectMapper()</span>
-
-    fun toJson(value: Any): String =
-<span class="fc" id="L17">        try {</span>
-<span class="fc" id="L18">            objectMapper.writeValueAsString(value)</span>
-<span class="nc" id="L19">        } catch (ex: Exception) {</span>
-<span class="nc" id="L20">            logger.error(</span>
+    private val objectMapper: ObjectMapper = jacksonObjectMapper()
+<span class="fc" id="L15"></span>
+<span class="fc" id="L16">    fun toJson(value: Any): String =</span>
+        try {
+            objectMapper.writeValueAsString(value)
+<span class="fc" id="L19">        } catch (ex: Exception) {</span>
+<span class="fc" id="L20">            logger.error(</span>
 <span class="nc" id="L21">                &quot;[toJson] Falha para converter objeto para JSON&quot;,</span>
 <span class="nc" id="L22">                ex</span>
-            )
-<span class="pc" id="L24">            throw RuntimeException(</span>
-<span class="nc" id="L25">                &quot;[toJson] Falha para converter objeto para JSON&quot;,</span>
-<span class="nc" id="L26">                ex</span>
-            )
-<span class="fc" id="L28">        }</span>
+<span class="nc" id="L23">            )</span>
+<span class="nc" id="L24">            throw RuntimeException(</span>
+                &quot;[toJson] Falha para converter objeto para JSON&quot;,
+<span class="pc" id="L26">                ex</span>
+<span class="nc" id="L27">            )</span>
+<span class="nc" id="L28">        }</span>
 
-    fun toEvent(json: String?): Event =
-<span class="fc" id="L31">        try {</span>
-<span class="fc" id="L32">            objectMapper.readValue(json, Event::class.java)</span>
-<span class="fc" id="L33">        } catch (ex: Exception) {</span>
-<span class="fc" id="L34">            logger.error(</span>
-<span class="fc" id="L35">                &quot;[toEvent] Falha para converter JSON para Event&quot;,</span>
-<span class="fc" id="L36">                ex</span>
-            )
-<span class="fc" id="L38">            throw RuntimeException(</span>
-<span class="fc" id="L39">                &quot;[toEvent] Falha para converter JSON para Event&quot;,</span>
-<span class="fc" id="L40">                ex</span>
-            )
-<span class="fc" id="L42">        }</span>
+<span class="fc" id="L30">    fun toEvent(json: String?): Event =</span>
+        try {
+            objectMapper.readValue(json, Event::class.java)
+<span class="nc" id="L33">        } catch (ex: Exception) {</span>
+<span class="nc" id="L34">            logger.error(</span>
+<span class="nc" id="L35">                &quot;[toEvent] Falha para converter JSON para Event&quot;,</span>
+<span class="nc" id="L36">                ex</span>
+<span class="nc" id="L37">            )</span>
+<span class="nc" id="L38">            throw RuntimeException(</span>
+                &quot;[toEvent] Falha para converter JSON para Event&quot;,
+<span class="nc" id="L40">                ex</span>
+<span class="nc" id="L41">            )</span>
+<span class="nc" id="L42">        }</span>
 
-}
+<span class="nc" id="L44">}</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

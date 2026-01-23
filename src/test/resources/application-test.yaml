@@ -1,7 +1,4 @@
 spring:
-  application:
-    name: ms-orchestrator
-
   cloud:
     aws:
       region:
@@ -9,8 +6,11 @@ spring:
       credentials:
         access-key: test
         secret-key: test
+        use-default-provider: false
       sqs:
-        endpoint: http://localstack:4566
+        endpoint: http://localhost:4566
+        listener:
+          auto-startup: false
 
   sqs:
     queues:
@@ -21,14 +21,11 @@ spring:
       payment-queue: payment-queue
       payment-callback-queue: payment-callback-queue
 
-server:
-  port: 8080
-
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info
       base-path: /actuator
   endpoint:
     health:
