@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component
 
     @SqsListener(&quot;\${spring.sqs.queues.order-queue}&quot;)
     fun consumeStartSagaEvent(payload: String) {
-<span class="nc" id="L19">        logger.info(&quot;[SagaOrchestratorConsumer.consumeStartSagaEvent] Recebendo evento {} da fila order-queue&quot;, payload)</span>
-<span class="nc" id="L20">        val event = jsonConverter.toEvent(payload)</span>
-<span class="nc" id="L21">        orchestrationUseCase.startSaga(event)</span>
-<span class="nc" id="L22">    }</span>
+<span class="fc" id="L19">        logger.info(&quot;[SagaOrchestratorConsumer.consumeStartSagaEvent] Recebendo evento {} da fila order-queue&quot;, payload)</span>
+<span class="fc" id="L20">        val event = jsonConverter.toEvent(payload)</span>
+<span class="fc" id="L21">        orchestrationUseCase.startSaga(event)</span>
+<span class="fc" id="L22">    }</span>
 
     @SqsListener(&quot;\${spring.sqs.queues.production-callback-queue}&quot;)
     fun consumeProductionCallbackQueue(payload: String) {

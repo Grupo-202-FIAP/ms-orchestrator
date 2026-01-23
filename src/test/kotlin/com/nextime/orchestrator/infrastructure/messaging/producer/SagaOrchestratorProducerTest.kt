@@ -5,11 +5,13 @@ import com.nextime.orchestrator.application.gateways.LoggerPort
 import com.nextime.orchestrator.infrastructure.exception.MessagePublishException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import org.mockito.stubbing.Answer
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest
 import software.amazon.awssdk.services.sqs.model.SendMessageResponse
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 class SagaOrchestratorProducerTest {
 
