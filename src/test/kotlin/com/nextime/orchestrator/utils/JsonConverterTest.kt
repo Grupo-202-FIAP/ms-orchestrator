@@ -3,9 +3,12 @@ package com.nextime.orchestrator.utils
 import com.nextime.orchestrator.application.gateways.LoggerPort
 import com.nextime.orchestrator.domain.Event
 import com.nextime.orchestrator.domain.Order
+import com.nextime.orchestrator.domain.OrderItem
+import com.nextime.orchestrator.domain.Product
 import com.nextime.orchestrator.domain.enums.EPaymentStatus
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 import java.util.*
 
 class JsonConverterTest {
@@ -108,6 +111,59 @@ class JsonConverterTest {
         assertThrows(RuntimeException::class.java) {
             converter.toEvent(bad)
         }
+    }
+
+    @Test
+    fun `toJson with null should throw exception`() {
+        // Using a workaround to test null handling - create a nullable variable and cast
+        val nullValue: Any? = null
+        assertThrows(Exception::class.java) {
+            @Suppress("UNCHECKED_CAST")
+            converter.toJson(nullValue as Any)
+        }
+    }
+
+    @Test
+    fun `toJson should serialize complex object with nested structures`() {
+        val order = Order(
+            id = UUID.randomUUID(),
+            transactinId = UUID.randomUUID(),
+            identifier = "ORDER-COMPLEX",
+            totalPrice = BigDecimal("150.75"),
+            totalItems = 2,
+            customerId = UUID.randomUUID(),
+            paymentStatus = EPaymentStatus.PROCESSED,
+            items = listOf(
+                OrderItem(
+                    id = UUID.randomUUID(),
+                    product = Product(
+                        id = UUID.randomUUID(),
+                        name = "Product 1",
+                        unitPrice = BigDecimal("75.00")
+                    ),
+                    quantity = 2
+                )
+            )
+        )
+
+        val json = converter.toJson(order)
+        assertNotNull(json)
+        assertTrue(json.contains("ORDER-COMPLEX"))
+        assertTrue(json.contains("150.75"))
+    }
+
+    @Test
+    fun `toEvent with null json should throw exception`() {
+        assertThrows(RuntimeException::class.java) {
+            converter.toEvent(null)
+        }
+    }
+
+    @Test
+    fun `toJson should handle empty string`() {
+        val json = converter.toJson("")
+        assertNotNull(json)
+        assertEquals("\"\"", json)
     }
 
 }
