@@ -16,6 +16,20 @@ spring:
         payment-queue: ${SQS_PAYMENT_QUEUE}
         payment-callback-queue: ${SQS_PAYMENT_CALLBACK_QUEUE}
 
-  server:
-    port: 8080
+server:
+  port: 8080
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true

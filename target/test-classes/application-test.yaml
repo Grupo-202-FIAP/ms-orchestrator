@@ -20,3 +20,20 @@ spring:
       production-callback-queue: production-callback-queue
       payment-queue: payment-queue
       payment-callback-queue: payment-callback-queue
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+      base-path: /actuator
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
