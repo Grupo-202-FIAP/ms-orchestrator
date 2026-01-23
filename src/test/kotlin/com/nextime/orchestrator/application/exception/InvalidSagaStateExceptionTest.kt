@@ -17,7 +17,7 @@ class InvalidSagaStateExceptionTest {
     fun `InvalidSagaStateException should be instance of RuntimeException`() {
         val exception = InvalidSagaStateException("Test")
 
-        assertTrue(exception is RuntimeException)
+        assertNotNull(exception as? RuntimeException)
     }
 }
 
