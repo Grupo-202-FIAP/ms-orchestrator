@@ -136,11 +136,11 @@
             <scope>test</scope>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>software.amazon.awssdk</groupId>-->
-<!--            <artifactId>sts</artifactId>-->
-<!--            <version>${sts.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sts</artifactId>
+            <version>${sts.version}</version>
+        </dependency>
 
     </dependencies>
 

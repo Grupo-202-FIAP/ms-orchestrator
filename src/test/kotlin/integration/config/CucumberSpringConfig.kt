@@ -14,5 +14,4 @@ import org.springframework.test.context.ActiveProfiles
     webEnvironment = SpringBootTest.WebEnvironment.NONE
 )
 @ActiveProfiles("test")
-class CucumberSpringConfig {
-}
+class CucumberSpringConfig

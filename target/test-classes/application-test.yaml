@@ -1,15 +1,7 @@
 spring:
   cloud:
     aws:
-      region:
-        static: us-east-1
-      credentials:
-        access-key: test
-        secret-key: test
-      sqs:
-        endpoint: http://localhost:4566
-        listener:
-          auto-startup: false
+      enabled: false
 
   sqs:
     queues:
